@@ -42,7 +42,7 @@ function videoCard(item) {
   return `<a class="card video-card" href="https://www.youtube.com/watch?v=${id}" data-video="${id}" data-title="${escape(item.title)}"><div class="video-cover"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true">▶</span></div><div class="video-body"><span class="meta">${escape(item.channel)}${item.year ? ` · ${escape(item.year)}` : ''}</span><h3>${escape(item.title)}</h3><span class="role">${escape(item.role)}</span><p>${escape(item.contribution)}</p><span class="arrow">Watch video ${arrow}</span></div></a>`;
 }
 async function start() {
-  const response = await fetch('./content.json');
+  const response = await fetch('./content.json', { cache: 'no-cache' });
   if (!response.ok) throw new Error('Content could not be loaded.');
   const content = await response.json();
   const person = content.person;
@@ -83,7 +83,7 @@ document.addEventListener('click', async event => {
   event.preventDefault();
   if (link.hasAttribute('data-pdf')) {
     try {
-      const reader = await import('./reader.js');
+      const reader = await import('./reader.js?v=paper-2');
       reader.openPdf(link.href, link.dataset.title);
     } catch { location.href = link.href; }
   } else {

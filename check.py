@@ -45,5 +45,5 @@ for name in ['index.html', 'about.html', 'writing.html', 'poetry.html', 'videos.
     html = (ROOT / name).read_text(encoding='utf-8')
     assert '<html lang="en">' in html and 'name="viewport"' in html
     for asset in re.findall(r'(?:src|href)="(assets/[^"]+)"', html):
-        assert (ROOT / asset).is_file(), f'Missing asset: {asset}'
+        assert (ROOT / urlparse(asset).path).is_file(), f'Missing asset: {asset}'
 print('OK: content, files and 5 pages validated.')

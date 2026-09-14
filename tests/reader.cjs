@@ -31,6 +31,7 @@ const server = http.createServer((request, response) => {
       };
       window.cancelAnimationFrame = id => { window.pendingFrames.delete(id); cancel(id); };
     });
+    await page.route('**/assets/app.js', route => route.fulfill({ contentType: 'text/javascript', body: 'throw new Error("Stale unversioned script loaded");' }));
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     for (const width of [1440, 390]) {
@@ -39,6 +40,12 @@ const server = http.createServer((request, response) => {
         await page.goto(`${origin}/${file}`);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+        const links = await page.locator('.nav a').evaluateAll(items => items.map(a => a.getAttribute('href')));
+        assert.deepEqual(links, ['about.html', 'writing.html', 'poetry.html', 'videos.html']);
+        for (const href of await page.locator('a[href]').evaluateAll(items => items.map(a => a.href))) {
+          const url = new URL(href);
+          if (url.origin === origin) assert.equal((await page.request.get(href)).status(), 200, href);
+        }
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, file);
         await expect(page.locator('.nav a')).toHaveText(['About', 'Writing & scripts', 'Poetry', 'On screen']);
       }
