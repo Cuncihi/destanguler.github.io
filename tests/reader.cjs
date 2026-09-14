@@ -35,16 +35,16 @@ const server = http.createServer((request, response) => {
     page.on('pageerror', error => errors.push(error.message));
     for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: 900 });
-      for (const file of ['index.html', 'hakkimda.html', 'yazilar.html', 'siirler.html', 'videolar.html']) {
+      for (const file of ['index.html', 'about.html', 'writing.html', 'poetry.html', 'videos.html']) {
         await page.goto(`${origin}/${file}`);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('html')).toHaveAttribute('lang', 'en');
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, file);
-        assert.doesNotMatch(await page.locator('body').innerText(), /Hakkımda|Yazılar|Şiirler|Özgeçmiş|Kelimeler|Ekranda|Senaryo/);
+        await expect(page.locator('.nav a')).toHaveText(['About', 'Writing & scripts', 'Poetry', 'On screen']);
       }
     }
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto(`${origin}/yazilar.html`);
+    await page.goto(`${origin}/writing.html`);
     await page.locator('[data-pdf]').click();
     await expect(page.locator('#page-count')).toHaveText('Page 1 of 3', { timeout: 30000 });
     await expect(page.locator('#previous')).toBeDisabled();
@@ -115,7 +115,7 @@ const server = http.createServer((request, response) => {
     await page.locator('[data-pdf]').click();
     await expect(page.locator('#page-count')).toHaveText('Page 1 of 3');
     await page.locator('#reader-close').click();
-    await page.goto(`${origin}/videolar.html`);
+    await page.goto(`${origin}/videos.html`);
     await page.locator('[data-video]').click();
     await expect(page.locator('#video-dialog iframe')).toHaveAttribute('src', /youtube-nocookie/);
     await page.locator('#video-dialog button').click();
@@ -126,18 +126,18 @@ const server = http.createServer((request, response) => {
     if (process.env.SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, 'home-english.png'), fullPage: true, animations: 'disabled' });
     const offline = await browser.newPage();
     await offline.route('https://cdn.jsdelivr.net/**', route => route.abort());
-    await offline.goto(`${origin}/yazilar.html`);
+    await offline.goto(`${origin}/writing.html`);
     await offline.locator('[data-pdf]').click();
     await expect(offline.locator('.reader-message')).toContainText('could not load', { timeout: 25000 });
     await expect(offline.locator('#original-pdf')).toHaveAttribute('href', /digital-killer-en.pdf/);
     await expect(offline.locator('#next')).toBeDisabled();
     const broken = await browser.newPage();
-    await broken.route('**/dosyalar/*.pdf', route => route.fulfill({ status: 404, body: 'Not found' }));
-    await broken.goto(`${origin}/yazilar.html`);
+    await broken.route('**/files/*.pdf', route => route.fulfill({ status: 404, body: 'Not found' }));
+    await broken.goto(`${origin}/writing.html`);
     await broken.locator('[data-pdf]').click();
     await expect(broken.locator('.reader-message')).toContainText('could not load', { timeout: 25000 });
     await expect(broken.locator('#next')).toBeDisabled();
-    await broken.unroute('**/dosyalar/*.pdf');
+    await broken.unroute('**/files/*.pdf');
     await broken.locator('#reader-close').click();
     await broken.locator('[data-pdf]').click();
     await expect(broken.locator('#page-count')).toHaveText('Page 1 of 3', { timeout: 25000 });

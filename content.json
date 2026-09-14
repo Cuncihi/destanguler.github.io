@@ -1,0 +1,41 @@
+{
+  "person": {
+    "name": "Destan Guler",
+    "monogram": "dg.",
+    "headline": "Words, stories and the other side of the screen.",
+    "intro": "Hi, I’m Destan. This is where my writing, poems and the projects I’m part of come together.",
+    "photo": "",
+    "photoAlt": "Portrait of Destan Guler",
+    "biography": [
+      "Welcome to my personal corner of the internet. A place for my writing, stories and creative work."
+    ],
+    "resumePdf": "",
+    "experience": [],
+    "links": [
+      {
+        "title": "GitHub",
+        "url": "https://github.com/destanguler"
+      }
+    ]
+  },
+  "writing": [
+    {
+      "title": "Digital Killer",
+      "type": "Script",
+      "year": "",
+      "description": "Between real life and purchased memories. An English synopsis and treatment.",
+      "pdf": "files/digital-killer-en.pdf"
+    }
+  ],
+  "poetry": [],
+  "videos": [
+    {
+      "title": "Red Bull Boss Fight: Enis Kirazoglu strikes back",
+      "url": "https://www.youtube.com/watch?v=XrVW9X_RzxI",
+      "channel": "Red Bull Gamerszon",
+      "year": "",
+      "role": "Sample project",
+      "contribution": "Details about my role and contribution will be added soon."
+    }
+  ]
+}
