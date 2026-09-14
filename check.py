@@ -43,7 +43,7 @@ for item in data['videolar']:
     assert re.fullmatch(r'https?://(?:(?:www\.|m\.)?youtube\.com/(?:watch\?v=|shorts/|live/|embed/)|youtu\.be/)[\w-]{11}(?:[?&#].*)?', item['url']), 'Geçersiz YouTube bağlantısı'
 for name in ['index.html', 'hakkimda.html', 'yazilar.html', 'siirler.html', 'videolar.html']:
     html = (ROOT / name).read_text(encoding='utf-8')
-    assert '<html lang="tr">' in html and 'name="viewport"' in html
+    assert '<html lang="en">' in html and 'name="viewport"' in html
     for asset in re.findall(r'(?:src|href)="(assets/[^"]+)"', html):
         assert (ROOT / asset).is_file(), f'Eksik kaynak: {asset}'
 print('OK: content, files and 5 pages validated.')

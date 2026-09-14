@@ -96,9 +96,19 @@ dialog::backdrop { background: #19221cba; backdrop-filter: blur(5px); }
 .icon-button { background: transparent; border: 1px solid var(--line); border-radius: 4px; min-width: 40px; min-height: 40px; color: var(--ink); flex-shrink: 0; }
 .reader-tools { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 14px; padding: 12px; border-bottom: 1px solid var(--line); font-size: 12px; }
 .reader-tools a { text-decoration: underline; text-underline-offset: 3px; }
-.pdf-frame { flex: 1; min-height: 0; background: #e7e8e0; }
-.pdf-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
-.reader-message { text-align: center; font-size: 14px; padding: 16px; margin: 0; }
+.reader-tools select { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 7px; font-size: 12px; }
+.reader-message { text-align: center; font-size: 12px; padding: 8px 16px; min-height: 32px; margin: 0; }
+.reader-stage { flex: 1; min-height: 0; overflow: auto; padding: 32px; background: #e7e8e0; }
+.book-mount { width: fit-content; margin: 0 auto; }
+.book-page { position: relative; background: #fdfcf8; box-shadow: 2px 2px 0 #f9f8f3, 4px 4px 0 #c9cbbf, 6px 6px 0 #faf9f5, 0 10px 25px #252b2526; }
+.book-sheet { background: white; overflow: hidden; }
+.book-sheet img { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; }
+.book-sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, #3b423315, transparent 3%); }
+.reader-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 22px; border-top: 1px solid var(--line); }
+.reader-bottom span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.page-text { margin: 24px auto 0; max-width: 720px; padding: 20px; background: var(--paper); line-height: 1.8; }
+.page-text summary { cursor: pointer; font-size: 12px; color: var(--green); }
+.page-text p { white-space: pre-wrap; margin: 20px 0 0; }
 .video-dialog { width: min(1000px, 95vw); }
 .video-dialog iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
 .video-dialog .external-video { display: block; margin: 16px 22px; font-size: 13px; text-decoration: underline; }
@@ -128,6 +138,9 @@ dialog::backdrop { background: #19221cba; backdrop-filter: blur(5px); }
   .footer { align-items: flex-start; flex-direction: column; justify-content: center; gap: 14px; padding: 24px 0; }
   .reader { width: 100vw; height: 100svh; border-radius: 0; border: 0; }
   .dialog-bar { padding: 12px; }
+  .reader-stage { padding: 16px; }
+  .reader-bottom { padding: 12px; }
+  .reader-bottom .button { padding: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }

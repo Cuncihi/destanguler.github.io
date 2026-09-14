@@ -21,4 +21,6 @@ Repo klasöründe `python -m http.server 8000` çalıştır; `http://localhost:8
 
 `python check.py` içerik alanlarını, yerel dosyaları ve bağlantı biçimlerini kontrol eder. `main` dalına push sonrası mevcut GitHub Pages yayını güncellenir.
 
-Sayfalar ortak `assets/site.css` ve `assets/app.js` kullanır. `assets/reader.js` PDF’yi site içindeki pencerede tarayıcının kendi okuyucusuyla gösterir; yeni sekmede açma ve indirme bağlantıları da vardır. YouTube oynatıcısı videoya tıklandığında yüklenir. Harici JavaScript bağımlılığı yoktur.
+Playwright ve Edge kurulu geliştirme ortamında `node tests/reader.cjs` okuyucuyu ve sayfaları test eder. Test kendi yerel sunucusunu başlatır.
+
+Site metinleri İngilizcedir; içerik dosyasındaki alan adları ve `Yazı` / `Senaryo` türleri aynı kalır. Sayfalar ortak `assets/site.css` ve `assets/app.js` kullanır. `assets/reader.js`, PDF açıldığında CDN’den PDF.js 6.3.289 yükler. Kâğıt kıvrılması ve köşeden sürükleme için yerel `assets/vendor/page-flip.js` (StPageFlip 2.0.7, MIT) kullanılır; kapatırken animasyon döngüsü ve resize dinleyicisinin temizlenmesi düzeltilmiştir. Okuyucu klavye okları, yakınlaştırma, metin görünümü ve hareketi azaltma tercihini destekler. Yalnızca mevcut sayfa ve iki yanındaki sayfalar görsele çevrilir. Okuyucu yüklenemezse PDF açma ve indirme bağlantıları kullanılabilir. YouTube oynatıcısı videoya tıklandığında yüklenir.
