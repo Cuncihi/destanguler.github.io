@@ -1,0 +1,34 @@
+{
+  "kisi": {
+    "ad": "Destan Güler",
+    "monogram": "dg.",
+    "giris": "Kelimeler, hikâyeler ve ekranın öteki tarafı.",
+    "tanitim": "Merhaba, ben Destan. Yazılarımı, şiirlerimi ve parçası olduğum projeleri burada bir araya getiriyorum.",
+    "fotograf": "",
+    "fotografAciklamasi": "Destan Güler portresi",
+    "biyografi": ["İnternetteki kişisel köşeme hoş geldin. Burası yazılarım, hikâyelerim ve çalışmalarım için bir buluşma noktası."],
+    "ozgecmisPdf": "",
+    "deneyimler": [],
+    "baglantilar": [{ "baslik": "GitHub", "url": "https://github.com/destanguler" }]
+  },
+  "yazilar": [
+    {
+      "baslik": "Digital Killer",
+      "tur": "Senaryo",
+      "yil": "",
+      "aciklama": "Gerçek hayat ile satın alınan anılar arasında. İngilizce sinopsis ve tretman.",
+      "pdf": "dosyalar/digital-killer-en.pdf"
+    }
+  ],
+  "siirler": [],
+  "videolar": [
+    {
+      "baslik": "Red Bull Boss Fight: Şimdi Enis Kirazoğlu karşılık veriyor",
+      "url": "https://www.youtube.com/watch?v=XrVW9X_RzxI",
+      "kanal": "Red Bull Gamerszon",
+      "yil": "",
+      "rol": "Örnek çalışma",
+      "katki": "Bu projedeki rol ve katkı bilgisi yakında eklenecek."
+    }
+  ]
+}
