@@ -2,15 +2,19 @@
   "person": {
     "name": "Destan Guler",
     "monogram": "dg.",
-    "headline": "Words, stories and the other side of the screen.",
-    "intro": "Hi, I’m Destan. This is where my writing, poems and the projects I’m part of come together.",
+    "headline": "Narrative Consultant & Writer — Based in Tokyo.",
+    "intro": "Hi, I'm Destan. This is where my writing, poems and the projects I'm part of come together.",
+    "aboutHeadline": "I'm a storyteller, a content creator, and someone who genuinely believes the right words can change everything.",
+    "biography": [
+      "Based in Tokyo, I'm a creative professional with a background in digital marketing, content production, and narrative writing. I've worked with global brands, managed campaigns that drove real results, and contributed to productions that brought stories to life on screen. Whether it's a brand narrative, a short film, or a character's dialogue — I believe every great piece of communication starts with a compelling story.",
+      "Deep down, I've always been a storyteller. It started with poems as a kid, grew into screenplays at university, and found its way onto production sets. Games, films, books, series — if there's a narrative, I'm invested. That obsession is what drives everything I do."
+    ],
     "photo": "",
     "photoAlt": "Portrait of Destan Guler",
-    "biography": [
-      "Welcome to my personal corner of the internet. A place for my writing, stories and creative work."
-    ],
     "resumePdf": "",
     "experience": [],
+    "email": "hello.destan@gmail.com",
+    "phone": "",
     "links": [
       {
         "title": "GitHub",
@@ -18,6 +22,7 @@
       }
     ]
   },
+  "featured": [],
   "writing": [
     {
       "title": "Digital Killer",
