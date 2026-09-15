@@ -12,6 +12,8 @@ Edit `content.json`. Put photos and PDFs in `files/`, using lowercase English fi
 - **Poetry:** add `{"title":"Poem title","description":"A short description","pdf":"files/poem.pdf"}` to `poetry`.
 - **Videos:** copy an entry in `videos`. Set the YouTube `url`, your `role` (for example, `Consultant`), and your `contribution`.
 - **Links:** add `{"title":"Instagram","url":"https://..."}` to `person.links`.
+- **Featured Work:** an empty `featured` list automatically displays the existing writing and videos. Set a custom selection with entries such as `{"type":"Screenwriting","title":"Project title","pdf":"files/project.pdf"}` or use `url` for a project/video link. PDF and YouTube cards open the built-in readers. The homepage archive still links to writing, poetry and video pages.
+- **Contact:** edit `person.email` and `person.phone`; these appear on `contact.html` and in every footer. `person.aboutHeadline` is the large About statement. The portrait shows initials until `person.photo` is supplied.
 
 Separate entries with commas. List order determines display order. Empty lists can remain `[]`. Keep PDFs in this repository.
 
@@ -23,4 +25,6 @@ Run `python check.py` to validate content and local files. With Playwright and E
 
 ## Structure
 
-`index.html`, `about.html`, `writing.html`, `poetry.html`, and `videos.html` share `assets/site.css` and `assets/app.js`. The PDF reader loads PDF.js 6.3.289 from a CDN on demand. Local StPageFlip 2.0.7 (MIT) provides page curling; its animation-frame and resize-listener cleanup is patched. Only the current page and two pages on either side are rendered. Keyboard navigation, zoom, text view, reduced motion, and direct PDF links are supported. YouTube players load when clicked.
+`index.html`, `about.html`, `contact.html`, `writing.html`, `poetry.html`, and `videos.html` share `assets/site.css` and `assets/app.js`. The PDF reader loads PDF.js 6.3.289 from a CDN on demand. Local StPageFlip 2.0.7 (MIT) provides page curling; its animation-frame and resize-listener cleanup is patched. Only the current page and two pages on either side are rendered. Keyboard navigation, zoom, text view, reduced motion, and direct PDF links are supported. YouTube players load when clicked.
+
+The light layout follows the supplied Wix Copywriter template (3062). `assets/pencils.jpg` is the decorative pencil photograph from that reference: https://static.wixstatic.com/media/11062b_b5694538c2eb4f028cc14ff890617424~mv2.jpg . Project placeholders are drawn with CSS; no sample client work or stock portrait is presented as Destan's work or identity.

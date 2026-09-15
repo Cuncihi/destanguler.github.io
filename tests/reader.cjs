@@ -36,23 +36,30 @@ const server = http.createServer((request, response) => {
     page.on('pageerror', error => errors.push(error.message));
     for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: 900 });
-      for (const file of ['index.html', 'about.html', 'writing.html', 'poetry.html', 'videos.html']) {
+      for (const file of ['index.html', 'about.html', 'contact.html', 'writing.html', 'poetry.html', 'videos.html']) {
         await page.goto(`${origin}/${file}`);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('html')).toHaveAttribute('lang', 'en');
         const links = await page.locator('.nav a').evaluateAll(items => items.map(a => a.getAttribute('href')));
-        assert.deepEqual(links, ['about.html', 'writing.html', 'poetry.html', 'videos.html']);
+        assert.deepEqual(links, ['index.html#featured', 'about.html', 'contact.html']);
         for (const href of await page.locator('a[href]').evaluateAll(items => items.map(a => a.href))) {
           const url = new URL(href);
           if (url.origin === origin) assert.equal((await page.request.get(href)).status(), 200, href);
         }
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, file);
-        await expect(page.locator('.nav a')).toHaveText(['About', 'Writing & scripts', 'Poetry', 'On screen']);
+        await expect(page.locator('.nav a')).toHaveText(['Work', 'About', 'Contact']);
+        await expect(page.locator('.footer a[href="mailto:hello.destan@gmail.com"]')).toBeVisible();
+        await expect(page.locator('.footer a[href="tel:+817090236141"]')).toBeVisible();
+        if (file === 'index.html') {
+          assert.equal(await page.locator('a.work-card').count(), 3);
+          assert.equal(await page.locator('.work-card[data-pdf]').count(), 2);
+          await expect(page.locator('.work-card[data-video]')).toHaveAttribute('data-video', 'XrVW9X_RzxI');
+        }
       }
     }
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(`${origin}/writing.html`);
-    await page.locator('[data-pdf]').click();
+    await page.locator('[data-pdf][data-title="Digital Killer"]').click();
     await expect(page.locator('#page-count')).toHaveText('Page 1 of 3', { timeout: 30000 });
     await expect(page.locator('#previous')).toBeDisabled();
     await expect(page.locator('#next')).toBeEnabled();
@@ -112,14 +119,14 @@ const server = http.createServer((request, response) => {
     await page.keyboard.press('Escape');
     await expect(page.locator('.reader .book-page')).toHaveCount(0);
     await expect.poll(() => page.evaluate(() => window.pendingFrames.size)).toBe(0);
-    await expect(page.locator('[data-pdf]')).toBeFocused();
-    await page.locator('[data-pdf]').click();
+    await expect(page.locator('[data-pdf][data-title="Digital Killer"]')).toBeFocused();
+    await page.locator('[data-pdf][data-title="Digital Killer"]').click();
     await expect(page.locator('#page-count')).toHaveText('Page 1 of 3');
     await expect(page.locator('#next')).toBeEnabled();
     await page.keyboard.press('ArrowRight');
     await page.locator('#reader-close').click();
     await expect(page.locator('.reader .book-page')).toHaveCount(0);
-    await page.locator('[data-pdf]').click();
+    await page.locator('[data-pdf][data-title="Digital Killer"]').click();
     await expect(page.locator('#page-count')).toHaveText('Page 1 of 3');
     await page.locator('#reader-close').click();
     await page.goto(`${origin}/videos.html`);
@@ -134,19 +141,19 @@ const server = http.createServer((request, response) => {
     const offline = await browser.newPage();
     await offline.route('https://cdn.jsdelivr.net/**', route => route.abort());
     await offline.goto(`${origin}/writing.html`);
-    await offline.locator('[data-pdf]').click();
+    await offline.locator('[data-pdf][data-title="Digital Killer"]').click();
     await expect(offline.locator('.reader-message')).toContainText('could not load', { timeout: 25000 });
     await expect(offline.locator('#original-pdf')).toHaveAttribute('href', /digital-killer-en.pdf/);
     await expect(offline.locator('#next')).toBeDisabled();
     const broken = await browser.newPage();
     await broken.route('**/files/*.pdf', route => route.fulfill({ status: 404, body: 'Not found' }));
     await broken.goto(`${origin}/writing.html`);
-    await broken.locator('[data-pdf]').click();
+    await broken.locator('[data-pdf][data-title="Digital Killer"]').click();
     await expect(broken.locator('.reader-message')).toContainText('could not load', { timeout: 25000 });
     await expect(broken.locator('#next')).toBeDisabled();
     await broken.unroute('**/files/*.pdf');
     await broken.locator('#reader-close').click();
-    await broken.locator('[data-pdf]').click();
+    await broken.locator('[data-pdf][data-title="Digital Killer"]').click();
     await expect(broken.locator('#page-count')).toHaveText('Page 1 of 3', { timeout: 25000 });
     assert.deepEqual(errors, []);
     console.log('PASS: English pages, responsive layout, real PDF rendering, page bounds, animation, keyboard, swipe, zoom, text view, reduced motion, reopen/cleanup, YouTube, CDN failure and missing PDF recovery.');

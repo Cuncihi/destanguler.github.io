@@ -19,8 +19,7 @@ function youtubeId(value) {
   } catch { return ''; }
 }
 const arrow = '<span aria-hidden="true"> →</span>';
-const titles = { home: 'Home', about: 'About', writing: 'Writing & Scripts', poetry: 'Poetry', video: 'On Screen' };
-const routes = { home: 'index.html', about: 'about.html', writing: 'writing.html', poetry: 'poetry.html', video: 'videos.html' };
+const titles = { home: 'Home', about: 'About', writing: 'Writing & Scripts', poetry: 'Poetry', video: 'On Screen', contact: 'Contact' };
 
 function portrait(person) {
   const url = safeUrl(person.photo);
@@ -72,187 +71,66 @@ async function start() {
   if (!response.ok) throw new Error('Content could not be loaded.');
   const content = await response.json();
   const person = content.person;
-
   document.title = `${titles[page]} — ${person.name}`;
   document.querySelector('meta[name="description"]').content = person.intro;
-  document.querySelector('.brand').textContent = person.name.toLocaleLowerCase('en');
-  document.querySelector('.nav').innerHTML = Object.entries(routes)
-    .filter(([key]) => key !== 'home')
-    .map(([key, url]) => `<a href="${url}"${key === page ? ' aria-current="page"' : ''}>${titles[key]}</a>`)
-    .join('');
+  document.querySelector('.brand-name').textContent = person.name;
+  document.querySelector('.nav').innerHTML = [
+    ['home', 'Work', 'index.html#featured'], ['about', 'About', 'about.html'], ['contact', 'Contact', 'contact.html']
+  ].map(([key, title, url]) => `<a href="${url}"${key === page && page !== 'home' ? ' aria-current="page"' : ''}>${title}</a>`).join('');
   document.querySelector('.copyright').textContent = `© ${new Date().getFullYear()} ${person.name}`;
-  document.querySelector('.social').innerHTML = person.links
-    .filter(item => safeUrl(item.url))
-    .map(item => `<a href="${escape(safeUrl(item.url))}" target="_blank" rel="noopener">${escape(item.title)}${arrow}</a>`)
-    .join('');
+  document.querySelector('.social').innerHTML = person.links.filter(l => safeUrl(l.url))
+    .map(l => `<a href="${escape(safeUrl(l.url))}" target="_blank" rel="noopener">${escape(l.title)} ↗</a>`).join('');
+  const contactDetails = `<div class="contact-details"><a href="mailto:${escape(person.email)}">${escape(person.email)}</a><a href="tel:${escape(person.phone)}">Tel: ${escape(person.phone)}</a></div>`;
+  document.querySelector('.footer-contact').innerHTML = contactDetails;
 
-  /* ── HOME ─────────────────────────────────────────────────── */
   if (page === 'home') {
-    // Featured works — placeholder cards (3 items)
-    const featuredWorks = content.featured || [];
-    const workCards = featuredWorks.length
-      ? featuredWorks.map((w, i) => {
-          const num = String(i + 1).padStart(2, '0');
-          const url = safeUrl(w.pdf || w.url || '');
-          const tag = url ? `a` : `div`;
-          const attrs = url ? ` href="${escape(url)}"${w.pdf ? ` data-pdf data-title="${escape(w.title)}"` : w.videoId ? ` data-video="${escape(w.videoId)}"` : ''}` : '';
-          return `<${tag} class="work-card"${attrs}>
-            <div class="work-card-num">${num}</div>
-            <div class="work-card-label">${escape(w.type || 'Project')}</div>
-            <h3>${escape(w.title)}</h3>
-            <p>${escape(w.description || '')}</p>
-            <span class="work-card-arrow">View work →</span>
-          </${tag}>`;
-        }).join('')
-      : [
-          ['01', 'Script', 'Featured Work', 'Coming soon — a screenplay or project to be added here.'],
-          ['02', 'Essay', 'Featured Work', 'Coming soon — a piece of writing to be added here.'],
-          ['03', 'Project', 'Featured Work', 'Coming soon — a collaboration or production to be added here.'],
-        ].map(([num, label, title, desc]) =>
-          `<div class="work-card work-card-placeholder">
-            <div class="work-card-num">${num}</div>
-            <div class="work-card-label">${label}</div>
-            <h3>${title}</h3>
-            <p>${desc}</p>
-          </div>`
-        ).join('');
-
-    main.innerHTML = `
-      <section class="shell">
-        <div class="hero">
-          <p class="hero-tag">Narrative Consultant &amp; Writer</p>
-          <h1>${escape(person.headline)}</h1>
-          <div class="hero-bottom">
-            <p class="hero-intro">${escape(person.intro)}</p>
-            <div class="hero-cta">
-              <a class="button primary" href="about.html">About me${arrow}</a>
-              <a class="button secondary" href="writing.html">My work${arrow}</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="featured-label">
-        <div class="shell">
-          <div class="section-header">
-            <p class="section-label" id="featured-label">Selected Work</p>
-            <span class="section-num">01 — 03</span>
-          </div>
-          <div class="work-grid">${workCards}</div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="explore-label">
-        <div class="shell">
-          <div class="section-header">
-            <p class="section-label" id="explore-label">Explore</p>
-          </div>
-          <div class="nav-grid">
-            ${[
-              ['01', 'Writing &amp; Scripts', 'From a thought to a story. Essays, screenplays and scripts.', 'writing.html', 'Read'],
-              ['02', 'Poetry', 'Sometimes a few lines hold everything that matters.', 'poetry.html', 'Read'],
-              ['03', 'On Screen', 'Productions and YouTube projects I have contributed to.', 'videos.html', 'Watch'],
-            ].map(([num, title, text, url, cta]) =>
-              `<a class="nav-card" href="${url}">
-                <div class="nav-card-num">${num}</div>
-                <h3>${title}</h3>
-                <p>${text}</p>
-                <span class="nav-card-link">${cta}${arrow}</span>
-              </a>`
-            ).join('')}
-          </div>
-        </div>
-      </section>
-
-      <section class="contact-section" aria-labelledby="contact-label">
-        <div class="shell">
-          <div class="contact-inner">
-            <div class="contact-left">
-              <p class="section-label" id="contact-label">Get in Touch</p>
-              <h2 class="contact-big-title">Let's work on something <em>worth telling</em>.</h2>
-              <p class="contact-desc">Have a project in mind? Want to collaborate on a script, campaign or narrative? I'd love to hear from you.</p>
-              <a class="button secondary" href="about.html">More about me${arrow}</a>
-            </div>
-            <div class="contact-right">
-              ${person.email ? `<div class="contact-item">
-                <div class="contact-item-label">Email</div>
-                <div class="contact-item-value"><a href="mailto:${escape(person.email)}">${escape(person.email)}</a></div>
-              </div>` : ''}
-              ${person.phone ? `<div class="contact-item">
-                <div class="contact-item-label">Phone</div>
-                <div class="contact-item-value"><a href="tel:${escape(person.phone)}">${escape(person.phone)}</a></div>
-              </div>` : ''}
-              ${person.links.filter(l => safeUrl(l.url)).map(l =>
-                `<div class="contact-item">
-                  <div class="contact-item-label">${escape(l.title)}</div>
-                  <div class="contact-item-value"><a href="${escape(safeUrl(l.url))}" target="_blank" rel="noopener">${escape(l.title)}</a></div>
-                </div>`
-              ).join('')}
-            </div>
-          </div>
-        </div>
-      </section>
-    `;
-
-  /* ── ABOUT ────────────────────────────────────────────────── */
+    const featured = content.featured.length ? content.featured : [...content.writing, ...content.videos];
+    const workCards = featured.map((work, i) => {
+      const url = safeUrl(work.pdf || work.url);
+      const video = !work.pdf && youtubeId(work.url);
+      const label = work.type || (video ? 'Video' : 'Project');
+      const action = work.pdf ? 'Read script ↗' : video ? 'Watch video ▶' : 'View work ↗';
+      const tag = url ? 'a' : 'article';
+      return `<${tag} class="work-card work-${i % 4}${video ? ' work-video' : ''}"${url ? ` href="${escape(url)}" data-title="${escape(work.title)}"${work.pdf ? ' data-pdf' : video ? ` data-video="${video}"` : ''}` : ''}>
+        <div class="work-art">${video ? `<img class="work-cover" src="https://i.ytimg.com/vi/${video}/hqdefault.jpg" alt="" loading="lazy">` : ''}<span class="work-number">0${i + 1} / ${escape(label)}</span>
+          <span class="work-title">${escape(work.title)}</span><span class="work-status">${url ? action : 'Coming soon'}</span></div>
+        <div class="work-caption"><h3>${escape(label)}</h3><span>${escape(work.description || work.channel || '')}</span></div>
+      </${tag}>`;
+    }).join('');
+    main.innerHTML = `<section class="hero shell">
+      <div class="hero-copy"><p class="hero-tag">Narrative Consultant &amp; Writer</p><h1>${escape(person.headline)}</h1></div>
+      ${portrait(person)}
+      </section><div class="pencil-banner" role="img" aria-label="Colourful pencils arranged across a creative workspace"></div>
+      <section class="featured shell" id="featured" aria-labelledby="featured-title"><h2 id="featured-title" class="section-title">Featured Work</h2><div class="work-grid">${workCards}</div></section>
+      <section class="services shell" aria-labelledby="services-title"><h2 id="services-title" class="section-title">What I Do</h2>
+        <ul><li>Narrative Consulting</li><li>Brand Stories</li><li>Screenwriting</li><li>Content Creation</li><li>Character &amp; Dialogue</li><li>Campaign Ideas</li></ul>
+      </section><section class="archive shell" aria-label="Explore the archive"><span>More stories, this way</span><div><a href="writing.html">Writing &amp; scripts ↗</a><a href="poetry.html">Poetry ↗</a><a href="videos.html">On screen ↗</a></div></section>`;
   } else if (page === 'about') {
     const cv = safeUrl(person.resumePdf);
-    main.innerHTML = `
-      <div class="shell">
-        <div class="about-layout">
-          ${portrait(person)}
-          <section>
-            <p class="about-tag">About</p>
-            <h2 class="about-title">${escape(person.aboutHeadline || person.name)}</h2>
-            <div class="prose">${person.biography.map(p => `<p>${escape(p)}</p>`).join('')}</div>
-            ${cv ? `<a class="button secondary resume" href="${escape(cv)}" data-pdf data-title="CV — ${escape(person.name)}">Read my CV${arrow}</a>` : ''}
-            <div class="exp-section">
-              <h2>Experience</h2>
-              ${person.experience.length
-                ? person.experience.map(item => `
-                  <article class="experience">
-                    <span class="exp-period">${escape(item.period)}</span>
-                    <div>
-                      <h3>${escape(item.title)}</h3>
-                      <p>${escape(item.description)}</p>
-                    </div>
-                  </article>`).join('')
-                : `<p class="lead" style="border-top:1px solid var(--line);padding-top:24px">More about my journey, coming soon.</p>`
-              }
-            </div>
-          </section>
-        </div>
-      </div>
-    `;
-
-  /* ── WRITING / POETRY ─────────────────────────────────────── */
+    main.innerHTML = `<section class="about-page shell"><h1 class="page-title">About</h1>
+      <h2 class="about-headline">${escape(person.aboutHeadline)}</h2>
+      <div class="about-body">${portrait(person)}<div class="prose">${person.biography.map(p => `<p>${escape(p)}</p>`).join('')}
+      ${cv ? `<a class="button" href="${escape(cv)}" data-pdf data-title="CV — ${escape(person.name)}">Read my CV ↗</a>` : ''}</div></div>
+      ${person.experience.length ? `<section class="experience-list"><h2 class="section-title">Experience</h2>${person.experience.map(item => `<article class="experience"><span>${escape(item.period)}</span><div><h3>${escape(item.title)}</h3><p>${escape(item.description)}</p></div></article>`).join('')}</section>` : ''}</section>`;
+  } else if (page === 'contact') {
+    main.innerHTML = `<section class="contact-page shell"><h1 class="page-title">Get in Touch</h1><div class="contact-layout"><div>${contactDetails}<p class="location">Based in Tokyo.<br>Open to stories everywhere.</p></div><div class="contact-invitation"><h2>Every great story starts with a conversation.</h2><p>Have a narrative, a script, or a creative project in mind? I'd love to hear from you.</p><a class="button" href="mailto:${escape(person.email)}">Let's talk ↗</a></div></div></section>`;
   } else if (page === 'writing' || page === 'poetry') {
     const poetry = page === 'poetry';
     const items = (poetry ? content.poetry : content.writing).filter(item => safeUrl(item.pdf));
-    main.innerHTML = `<div class="shell">` + (poetry
-      ? pageHero('Verse', 'Few words.<br>Deep feelings.', 'Poems to pause with, feel, and return to.')
-      : pageHero('Words', 'Between the pages.', 'Writing and scripts. Open a title and turn the pages at your own pace.'));
-    if (!poetry && items.length) {
-      main.insertAdjacentHTML('beforeend', '<div class="filters" role="group" aria-label="Filter by category"><button class="filter" data-filter="All" aria-pressed="true">All</button><button class="filter" data-filter="Essay" aria-pressed="false">Essays</button><button class="filter" data-filter="Script" aria-pressed="false">Scripts</button></div>');
-    }
-    main.insertAdjacentHTML('beforeend',
-      `<div id="works">${items.length ? `<div class="grid">${items.map(pdfCard).join('')}</div>` : empty(poetry ? 'A home for the verses.' : 'Making room for new stories.', poetry ? 'New poems will appear here as they are added.' : 'New writing and scripts will find their place in this library.')}</div></div>`
-    );
+    main.innerHTML = `<section class="library shell">${poetry ? pageHero('Poetry', 'Few words. Deep feelings.', 'Poems to pause with, feel, and return to.') : pageHero('Writing & scripts', 'Between the pages.', 'Writing and scripts. Open a title and turn the pages at your own pace.')}
+      ${!poetry && items.length ? '<div class="filters" role="group" aria-label="Filter by category"><button class="filter" data-filter="All" aria-pressed="true">All</button><button class="filter" data-filter="Essay" aria-pressed="false">Essays</button><button class="filter" data-filter="Script" aria-pressed="false">Scripts</button></div>' : ''}
+      <div id="works">${items.length ? `<div class="grid">${items.map(pdfCard).join('')}</div>` : empty('New stories are on their way.', 'New work will appear here as it is added.')}</div></section>`;
     document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
       document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
       const filtered = items.filter(item => button.dataset.filter === 'All' || item.type === button.dataset.filter);
-      document.querySelector('#works').innerHTML = filtered.length
-        ? `<div class="grid">${filtered.map(pdfCard).join('')}</div>`
-        : empty('Nothing here just yet.', 'New work in this category will appear here.');
+      document.querySelector('#works').innerHTML = filtered.length ? `<div class="grid">${filtered.map(pdfCard).join('')}</div>` : empty('Nothing here just yet.', 'New work in this category will appear here.');
     }));
-
-  /* ── VIDEO ────────────────────────────────────────────────── */
   } else if (page === 'video') {
     const videos = content.videos.filter(item => youtubeId(item.url));
-    main.innerHTML = `<div class="shell">` + pageHero('Frame', 'On the other side of the screen.', 'Productions and YouTube projects I have contributed to.')
-      + (videos.length ? `<div class="grid">${videos.map(videoCard).join('')}</div>` : empty('The curtain opens soon.', 'Videos and projects I have contributed to will come together here.'))
-      + '</div>';
+    main.innerHTML = `<section class="library shell">${pageHero('On screen', 'On the other side of the screen.', 'Productions and YouTube projects I have contributed to.')}${videos.length ? `<div class="grid">${videos.map(videoCard).join('')}</div>` : empty('The curtain opens soon.', 'New projects will appear here.')}</section>`;
   }
+  // Content is rendered asynchronously, so restore direct links to the work section.
+  if (location.hash === '#featured') document.querySelector('#featured')?.scrollIntoView();
 }
 
 document.addEventListener('click', async event => {

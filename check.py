@@ -22,6 +22,9 @@ def local_file(value, suffixes):
 
 person = data['person']
 fields(person, ['name', 'monogram', 'headline', 'intro', 'photoAlt'])
+fields(person, ['aboutHeadline', 'email', 'phone'])
+assert re.fullmatch(r'[^\s@]+@[^\s@]+\.[^\s@]+', person['email']), 'Invalid email'
+assert re.fullmatch(r'\+[1-9][0-9]{6,14}', person['phone']), 'Phone must use international format'
 assert isinstance(person['biography'], list) and all(isinstance(p, str) for p in person['biography'])
 local_file(person['photo'], {'.jpg', '.jpeg', '.png', '.webp', '.avif'})
 local_file(person['resumePdf'], {'.pdf'})
@@ -41,9 +44,10 @@ for key in ['writing', 'poetry']:
 for item in data['videos']:
     fields(item, ['title', 'url', 'channel', 'role', 'contribution'])
     assert re.fullmatch(r'https?://(?:(?:www\.|m\.)?youtube\.com/(?:watch\?v=|shorts/|live/|embed/)|youtu\.be/)[\w-]{11}(?:[?&#].*)?', item['url']), 'Invalid YouTube URL'
-for name in ['index.html', 'about.html', 'writing.html', 'poetry.html', 'videos.html']:
+for name in ['index.html', 'about.html', 'contact.html', 'writing.html', 'poetry.html', 'videos.html']:
     html = (ROOT / name).read_text(encoding='utf-8')
     assert '<html lang="en">' in html and 'name="viewport"' in html
     for asset in re.findall(r'(?:src|href)="(assets/[^"]+)"', html):
         assert (ROOT / urlparse(asset).path).is_file(), f'Missing asset: {asset}'
-print('OK: content, files and 5 pages validated.')
+assert (ROOT / 'assets/pencils.jpg').is_file()
+print('OK: content, contact details, files and 6 pages validated.')

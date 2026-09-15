@@ -2,8 +2,8 @@
   "person": {
     "name": "Destan Guler",
     "monogram": "dg.",
-    "headline": "Narrative Consultant & Writer — Based in Tokyo.",
-    "intro": "Hi, I'm Destan. This is where my writing, poems and the projects I'm part of come together.",
+    "headline": "Hello. I'm Destan Guler, a narrative consultant & writer bringing stories to life — on the page, on screen, and beyond.",
+    "intro": "Destan Guler — Narrative Consultant & Writer based in Tokyo. Brand stories, screenplays, and creative collaborations.",
     "aboutHeadline": "I'm a storyteller, a content creator, and someone who genuinely believes the right words can change everything.",
     "biography": [
       "Based in Tokyo, I'm a creative professional with a background in digital marketing, content production, and narrative writing. I've worked with global brands, managed campaigns that drove real results, and contributed to productions that brought stories to life on screen. Whether it's a brand narrative, a short film, or a character's dialogue — I believe every great piece of communication starts with a compelling story.",
@@ -14,13 +14,8 @@
     "resumePdf": "",
     "experience": [],
     "email": "hello.destan@gmail.com",
-    "phone": "",
-    "links": [
-      {
-        "title": "GitHub",
-        "url": "https://github.com/destanguler"
-      }
-    ]
+    "phone": "+817090236141",
+    "links": []
   },
   "featured": [],
   "writing": [
@@ -30,6 +25,13 @@
       "year": "",
       "description": "Between real life and purchased memories. An English synopsis and treatment.",
       "pdf": "files/digital-killer-en.pdf"
+    },
+    {
+      "title": "The Shelter",
+      "type": "Script",
+      "year": "",
+      "description": "A mother and her infant wait for rescue in a wartime shelter. An English synopsis and treatment.",
+      "pdf": "files/the-shelter.pdf"
     }
   ],
   "poetry": [],
